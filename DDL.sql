@@ -8,7 +8,7 @@ grant select, insert, delete, update on library.* to user@'localhost';
 
 create table books
 (
-    id int not null,
+    id bigint not null AUTO_INCREMENT,
     title varchar(255) not null,
     isbn varchar(64) not null,
     description text not null,
