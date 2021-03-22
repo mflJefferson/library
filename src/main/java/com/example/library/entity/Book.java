@@ -14,6 +14,16 @@ public class Book {
     @Column(name = "id")
     private long id;
 
+    // Autor
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "author_id")
+    private Author author;
+
+    // Editora
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "publisher_id")
+    private Publisher publisher;
+
     @Column(name = "title")
     private String title;
 
@@ -29,6 +39,22 @@ public class Book {
 
     @Column(name = "updated_at")
     private Date updated_at;
+
+    public Author getAuthor() {
+        return author;
+    }
+
+    public void setAuthor(Author author) {
+        this.author = author;
+    }
+
+    public Publisher getPublisher() {
+        return publisher;
+    }
+
+    public void setPublisher(Publisher publisher) {
+        this.publisher = publisher;
+    }
 
     public long getId() {
         return id;
