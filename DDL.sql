@@ -4,6 +4,8 @@ use library;
 
 create user 'user'@'localhost' identified by 'pass123';
 
+grant select, insert, delete, update on library.* to user@'localhost';
+
 -- MySQL dump 10.13  Distrib 8.0.23, for Linux (x86_64)
 --
 -- Host: 127.0.0.1    Database: library
