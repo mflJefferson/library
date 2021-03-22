@@ -6,6 +6,8 @@ import com.example.library.entity.Publisher;
 import com.example.library.repository.AuthorRepository;
 import com.example.library.repository.BookRepository;
 import com.example.library.repository.PublisherRepository;
+import com.example.library.service.AuthorService;
+import com.example.library.service.AuthorServiceImpl;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -32,6 +34,9 @@ class LibraryApplicationTests {
 
     @Autowired
     private PublisherRepository publisherRepository;
+
+    @Autowired
+    private AuthorServiceImpl authorService;
 
     @Test
     void contextLoads() {
@@ -86,6 +91,21 @@ class LibraryApplicationTests {
         Publisher publisher = publisherRepository.getOne(3L);
         List<Author> authors = authorRepository.searchByPublisher(publisher);
         assertEquals(3, authors.size());
+    }
+
+    @Test
+    void testAuthorService() {
+        String name = "Robert C. Martin";
+        String bookTitle = "Código Limpo";
+        String bookIsbn = "978-8576082675";
+        String bookDesc = "Mesmo um código ruim pode funcionar";
+        String publisher = "Alta Books";
+
+        Author author = authorService.createAuthor(name,
+                bookTitle, bookDesc, bookIsbn, publisher);
+
+        assertEquals(bookTitle, author.getBooks().iterator().next().getTitle());
+        assertEquals(publisher, author.getBooks().iterator().next().getPublisher().getName());
     }
 
 }
