@@ -3,6 +3,7 @@ package com.example.library.service;
 import com.example.library.entity.Author;
 import com.example.library.entity.Book;
 import com.example.library.entity.Publisher;
+import com.example.library.exception.ResourceNotFoundException;
 import com.example.library.repository.AuthorRepository;
 import com.example.library.repository.BookRepository;
 import com.example.library.repository.PublisherRepository;
@@ -10,8 +11,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.Optional;
 
 @Service("authorService")
 public class AuthorServiceImpl implements AuthorService {
@@ -55,6 +58,36 @@ public class AuthorServiceImpl implements AuthorService {
         publisherRepository.save(pub);
         bookRepository.save(book);
 
+        return author;
+    }
+
+    public Author createSingleAuthor(String name) {
+        Author author = new Author();
+        author.setName(name);
+
+        authorRepository.save(author);
+
+        return author;
+    }
+
+    @Override
+    public Collection<Author> getAuthors() {
+        return authorRepository.findAll();
+    }
+
+    public Author getOneAuthor(Long id) {
+        Optional<Author> author = authorRepository.findById(id);
+        if (author.isPresent()) {
+            return author.get();
+        }
+        throw new ResourceNotFoundException("Autor não existe");
+    }
+
+    @Override
+    public Author updateAuthor(Author author, String name) {
+        author.setName(name);
+
+        authorRepository.save(author);
         return author;
     }
 }

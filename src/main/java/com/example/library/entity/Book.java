@@ -1,5 +1,7 @@
 package com.example.library.entity;
 
+import com.example.library.controller.View;
+import com.fasterxml.jackson.annotation.JsonView;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
@@ -12,11 +14,13 @@ public class Book {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
+    @JsonView(View.Book.class)
     private long id;
 
     // Autor
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "author_id")
+    @JsonView({View.Book.class})
     private Author author;
 
     // Editora
@@ -25,20 +29,30 @@ public class Book {
     private Publisher publisher;
 
     @Column(name = "title")
+    @JsonView({View.Book.class, View.Author.class})
     private String title;
 
     @Column(name = "isbn")
+    @JsonView(View.Book.class)
     private String isbn;
 
     @Column(name = "description")
     @Type(type = "text")
+    @JsonView(View.Book.class)
     private String description;
 
     @Column(name = "created_at")
+    @JsonView({View.Book.class, View.Author.class})
     private Date created_at;
 
     @Column(name = "updated_at")
+    @JsonView(View.Book.class)
     private Date updated_at;
+
+    public Book() {
+        this.setCreated_at(new Date());
+        this.setUpdated_at(new Date());
+    }
 
     public Author getAuthor() {
         return author;
@@ -98,5 +112,9 @@ public class Book {
 
     public Date getUpdated_at() {
         return updated_at;
+    }
+
+    public void setUpdated_at(Date updated_at) {
+        this.updated_at = updated_at;
     }
 }
