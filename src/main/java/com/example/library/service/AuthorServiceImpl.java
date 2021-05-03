@@ -8,6 +8,7 @@ import com.example.library.repository.AuthorRepository;
 import com.example.library.repository.BookRepository;
 import com.example.library.repository.PublisherRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -29,6 +30,7 @@ public class AuthorServiceImpl implements AuthorService {
     private BookRepository bookRepository;
 
     @Transactional
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public Author createAuthor(String name, String bookTitle, String bookDesc, String bookIsbn, String publisher) {
         Publisher pub = publisherRepository.findPublisherByName(publisher);
         if (pub == null) {
@@ -61,6 +63,7 @@ public class AuthorServiceImpl implements AuthorService {
         return author;
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public Author createSingleAuthor(String name) {
         Author author = new Author();
         author.setName(name);
@@ -71,10 +74,12 @@ public class AuthorServiceImpl implements AuthorService {
     }
 
     @Override
+    @PreAuthorize("isAuthenticated()")
     public Collection<Author> getAuthors() {
         return authorRepository.findAll();
     }
 
+    @PreAuthorize("isAuthenticated()")
     public Author getOneAuthor(Long id) {
         Optional<Author> author = authorRepository.findById(id);
         if (author.isPresent()) {
@@ -84,6 +89,7 @@ public class AuthorServiceImpl implements AuthorService {
     }
 
     @Override
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public Author updateAuthor(Author author, String name) {
         author.setName(name);
 

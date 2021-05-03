@@ -5,6 +5,7 @@ import com.example.library.entity.Book;
 import com.example.library.exception.ResourceNotFoundException;
 import com.example.library.repository.BookRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
@@ -18,6 +19,7 @@ public class BookServiceImpl implements BookService {
     private BookRepository bookRepository;
 
     @Override
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public Book createBook(Book book) {
         Book new_book = new Book();
 
@@ -36,6 +38,7 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
+    @PreAuthorize("isAuthenticated()")
     public Book getOneBook(Long id) {
         Optional<Book> book = bookRepository.findById(id);
         if (book.isPresent()) {
@@ -45,6 +48,7 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public Book updateBook(Book book, Book newBook) {
         book.setDescription(newBook.getDescription());
         book.setTitle(newBook.getTitle());
@@ -58,6 +62,7 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public Book addAuthor(Book book, Author author) {
         book.setAuthor(author);
         author.getBooks().add(book);
@@ -66,6 +71,7 @@ public class BookServiceImpl implements BookService {
         return book;
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public Book deleteBook(Long id) {
         Optional<Book> book = bookRepository.findById(id);
         if (book.isPresent()) {
